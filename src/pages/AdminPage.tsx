@@ -56,6 +56,7 @@ const handleAdd = async (e: React.FormEvent) => {
     await addProduct({
       name,
       price,
+      description: "",   // backend requires description, but we can leave it empty for now
       stock: 10,        // required by backend
       category: categoryId  // just the ID
     });
