@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useProducts } from "../context/ProductsContext";
 
 function HomePage() {

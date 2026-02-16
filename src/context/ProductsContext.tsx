@@ -6,6 +6,15 @@ interface Category {
     name: string;
 }
 
+// For creating a new product (what backend expects)
+export interface NewProduct {
+  name: string;
+  price: number;
+  stock: number;
+  category: string; 
+}
+
+
 //shape of product
 export interface Product {
     _id: string;
@@ -15,12 +24,14 @@ export interface Product {
 }
 //shape of context
 interface ProductsContextType {
-    products: Product[];
-    loading: boolean;
-    fetchProducts: () => Promise<void>;
-    updateProductById: (id: string, updated: Product) => Promise<void>;
-    deleteProductById: (id: string) => Promise<void>;
+  products: Product[];
+  loading: boolean;
+  addProduct: (newProduct: Omit<NewProduct, "_id">) => Promise<void>;
+  fetchProducts: () => Promise<void>;
+  updateProductById: (id: string, updated: Product) => Promise<void>;
+  deleteProductById: (id: string) => Promise<void>;
 }
+
 
 // create contenxt
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
@@ -51,6 +62,33 @@ export const ProductsProvider: React.FC<ProductsProviderProps> = ({ children }) 
             setLoading(false);
         }
     };
+const addProduct = async (newProduct: Omit<NewProduct, "_id">) => {
+  try {
+    const res = await fetch(`${API_URL}/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify(newProduct)
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Failed to add product");
+    }
+
+    // The backend should return the created product with full category object
+    const createdProduct: Product = await res.json();
+    setProducts(prev => [...prev, createdProduct]);
+     fetchProducts(); // refresh list after adding
+  } catch (err) {
+    console.error("Error adding product:", err);
+    throw err; 
+
+  }
+};
+
 
     //update product by id
     const updateProductById = async (id: string, updated: Product) => {
@@ -99,7 +137,7 @@ export const ProductsProvider: React.FC<ProductsProviderProps> = ({ children }) 
 
     return (
         <ProductsContext.Provider
-            value={{ products, loading, fetchProducts, updateProductById, deleteProductById }}
+            value={{ products, loading, fetchProducts, updateProductById, deleteProductById, addProduct }}
         >
             {children}
         </ProductsContext.Provider>

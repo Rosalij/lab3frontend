@@ -1,6 +1,6 @@
-import React from "react";
+
 import { NavLink } from "react-router-dom";
-import { useAuth, } from "../context/authContext";
+import { useAuth, } from "../context/AuthContext";
 
 //header component with navigation
 function Header() {
