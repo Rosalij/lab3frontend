@@ -1,5 +1,5 @@
-
 import { useProducts } from "../context/ProductsContext";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const { products, loading } = useProducts();
@@ -22,7 +22,11 @@ function HomePage() {
             {products.map((p, i) => (
               <tr key={p._id}>
                 <td>{i + 1}</td>
-                <td>{p.name}</td>
+                <td>
+                  <Link to={`/product/${p._id}`} className="text-decoration-none">
+                    {p.name}
+                  </Link>
+                </td>
                 <td>{p.price}</td>
                 <td>{p.category?.name || "-"}</td>
               </tr>

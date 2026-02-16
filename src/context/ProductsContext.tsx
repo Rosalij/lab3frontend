@@ -11,12 +11,14 @@ export interface NewProduct {
   name: string;
   price: number;
   stock: number;
+  description: string;
   category: string; 
 }
 
 
 //shape of product
 export interface Product {
+    description: string;
     _id: string;
     name: string;
     price: number;
@@ -52,7 +54,12 @@ export const ProductsProvider: React.FC<ProductsProviderProps> = ({ children }) 
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${API_URL}/products`);
+            const res = await fetch(`${API_URL}/products`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
             if (!res.ok) throw new Error("Failed to fetch products");
             const data: Product[] = await res.json();
             setProducts(data);

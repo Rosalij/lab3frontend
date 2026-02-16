@@ -4,7 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import Layout from "./components/Layout.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
-
+import ProductPage from "./pages/ProductPage.tsx";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -22,7 +22,8 @@ const router = createBrowserRouter([
             {
                 path: "/admin",
                 element: (<ProtectedRoute><AdminPage /></ProtectedRoute>)
-            }
+            },  
+             { path: "/product/:id", element: <ProductPage /> },
         ]
     }
 
